@@ -13,8 +13,6 @@ APlatformerDude::APlatformerDude()
 
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->JumpZVelocity = JumpSpeed;
-
-	//set springarm in here
 }
 
 // Called when the game starts or when spawned
@@ -23,13 +21,16 @@ void APlatformerDude::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = CharacterSpeed;
-	bResetCamera = false;
+	bIsSprinting = false;
+	CurrentSpeedModifier = 1;
 }
 
 // Called every frame
 void APlatformerDude::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	SetSpeed(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -43,8 +44,6 @@ void APlatformerDude::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlatformerDude::StartSprint);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlatformerDude::StopSprint);
-	PlayerInputComponent->BindAction(TEXT("ResetCamera"), EInputEvent::IE_Pressed, this, &APlatformerDude::StartResetCamera);
-	PlayerInputComponent->BindAction(TEXT("ResetCamera"), EInputEvent::IE_Released, this, &APlatformerDude::StopResetCamera);
 }
 
 void APlatformerDude::MoveForward(float AxisValue)
@@ -65,25 +64,31 @@ void APlatformerDude::MoveSideways(float AxisValue)
 
 void APlatformerDude::StartSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed = SprintModifier * CharacterSpeed;
+	bIsSprinting = true;
 }
 
 void APlatformerDude::StopSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed = CharacterSpeed;
+	bIsSprinting = false;
 }
 
-void APlatformerDude::StartResetCamera()
+void APlatformerDude::SetSpeed(float DeltaTime)
 {
-	bResetCamera = true;
-}
-
-void APlatformerDude::StopResetCamera()
-{
-	bResetCamera = false;
-}
-
-bool APlatformerDude::GetResetCamera()
-{
-	return bResetCamera;
+	GetCharacterMovement()->MaxWalkSpeed = CurrentSpeedModifier*CharacterSpeed;
+	if (bIsSprinting)
+	{
+		CurrentSpeedModifier = FMath::FInterpTo(CurrentSpeedModifier, MaxSpeedModifier, DeltaTime, SpeedChange);
+		if (CurrentSpeedModifier >= MaxSpeedModifier-0.2)
+		{
+			CurrentSpeedModifier = MaxSpeedModifier;
+		}
+	}
+	else if (!bIsSprinting)
+	{
+		CurrentSpeedModifier = FMath::FInterpTo(CurrentSpeedModifier, 1, DeltaTime, SpeedChange);
+		if (CurrentSpeedModifier <= 1.2)
+		{
+			CurrentSpeedModifier = 1;
+		}
+	}
 }

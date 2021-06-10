@@ -19,9 +19,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(BlueprintPure)
-		bool GetResetCamera();
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -33,14 +30,16 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
 		float JumpSpeed = 600.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
-		float SprintModifier = 3;
+		float MaxSpeedModifier = 3.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
+		float SpeedChange = 0.5f;
 
 	void MoveForward(float AxisValue);
 	void MoveSideways(float AxisValue);
 	void StartSprint();
 	void StopSprint();
-	void StartResetCamera();
-	void StopResetCamera();
+	void SetSpeed(float DeltaTime);
 
-	bool bResetCamera;
+	bool bIsSprinting;
+	float CurrentSpeedModifier;
 };
