@@ -2,8 +2,10 @@
 
 
 #include "PlatformerDude.h"
+#include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#define OUT
 
 // Sets default values
 APlatformerDude::APlatformerDude()
@@ -13,6 +15,8 @@ APlatformerDude::APlatformerDude()
 
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->JumpZVelocity = JumpSpeed;
+
+	//might add a reset camera
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +35,11 @@ void APlatformerDude::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	SetSpeed(DeltaTime);
+	StompAttack();
+	if(ShowDebugStuff)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Current Speed Modifier: %f"), CurrentSpeedModifier);
+	}
 }
 
 // Called to bind functionality to input
@@ -75,7 +84,7 @@ void APlatformerDude::StopSprint()
 void APlatformerDude::SetSpeed(float DeltaTime)
 {
 	GetCharacterMovement()->MaxWalkSpeed = CurrentSpeedModifier*CharacterSpeed;
-	if (bIsSprinting)
+	if (bIsSprinting && !GetVelocity().IsZero())
 	{
 		CurrentSpeedModifier = FMath::FInterpTo(CurrentSpeedModifier, MaxSpeedModifier, DeltaTime, SpeedChange);
 		if (CurrentSpeedModifier >= MaxSpeedModifier-0.2)
@@ -90,5 +99,45 @@ void APlatformerDude::SetSpeed(float DeltaTime)
 		{
 			CurrentSpeedModifier = 1;
 		}
+		if (GetVelocity().IsZero())
+		{
+			CurrentSpeedModifier = 1;
+		}
+	}
+}
+
+void APlatformerDude::StompAttack()
+{
+	TArray<FHitResult> StompHitResults;
+	FVector TraceStart = GetActorLocation();
+	FVector TraceEnd(TraceStart.X, TraceStart.Y, TraceStart.Z - CylinderHeight);
+	FCollisionShape	TraceCylinder = FCollisionShape::MakeCapsule(CylinderRadius, CylinderHeight);
+	TraceCylinder.GetExtent();
+	FCollisionQueryParams StompParams;
+	StompParams.AddIgnoredActor(this);
+
+	bool bDidStomp = GetWorld()->SweepMultiByChannel(StompHitResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel1, TraceCylinder, StompParams);
+	if (bDidStomp)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Actor has been hit"));
+		FVector HitDirection = -TraceEnd;
+		for (FHitResult StompResult : StompHitResults)
+		{
+			AActor* StompedActor = StompResult.GetActor();
+			if (StompedActor != nullptr)
+			{
+				FPointDamageEvent StompEvent(StompDamage, StompResult, HitDirection, nullptr);
+				StompedActor->TakeDamage(StompDamage, StompEvent, GetController(), this);
+				if (ShowDebugStuff)
+				{
+				}
+			}
+		}
+	}
+	if (ShowDebugStuff)
+	{
+		FVector StartVector = GetActorLocation();
+		FVector EndVector(StartVector.X, StartVector.Y, StartVector.Z - CylinderHeight);
+		DrawDebugCylinder(GetWorld(), StartVector, EndVector, CylinderRadius, 16, FColor::Red, true);
 	}
 }

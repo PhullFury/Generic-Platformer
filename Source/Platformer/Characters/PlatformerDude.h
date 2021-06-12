@@ -33,12 +33,21 @@ private:
 		float MaxSpeedModifier = 3.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
 		float SpeedChange = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "General", meta = (AllowPrivateAccess = true))
+		bool ShowDebugStuff = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
+		float CylinderHeight = 50.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
+		float CylinderRadius = 60.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
+		float StompDamage = 1;
 
 	void MoveForward(float AxisValue);
 	void MoveSideways(float AxisValue);
 	void StartSprint();
 	void StopSprint();
 	void SetSpeed(float DeltaTime);
+	void StompAttack();
 
 	bool bIsSprinting;
 	float CurrentSpeedModifier;
