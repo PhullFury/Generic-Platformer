@@ -12,3 +12,5 @@ Saved
 *.suo
 *.xcodeproj
 *.xcworkspace
+Source/Platformer/Characters/EnenyBase.cpp
+Source/Platformer/Characters/EnenyBase.h
