@@ -108,36 +108,35 @@ void APlatformerDude::SetSpeed(float DeltaTime)
 
 void APlatformerDude::StompAttack()
 {
-	TArray<FHitResult> StompHitResults;
-	FVector TraceStart = GetActorLocation();
-	FVector TraceEnd(TraceStart.X, TraceStart.Y, TraceStart.Z - CylinderHeight);
-	FCollisionShape	TraceCylinder = FCollisionShape::MakeCapsule(CylinderRadius, CylinderHeight);
-	TraceCylinder.GetExtent();
-	FCollisionQueryParams StompParams;
-	StompParams.AddIgnoredActor(this);
-
-	bool bDidStomp = GetWorld()->SweepMultiByChannel(StompHitResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel1, TraceCylinder, StompParams);
-	if (bDidStomp)
+	if (GetCharacterMovement()->IsFalling())
 	{
-		UE_LOG(LogTemp, Error, TEXT("Actor has been hit"));
-		FVector HitDirection = -TraceEnd;
-		for (FHitResult StompResult : StompHitResults)
+		TArray<FHitResult> StompHitResults;
+		FVector TraceStart = GetActorLocation();
+		FVector TraceEnd(TraceStart.X, TraceStart.Y, TraceStart.Z - CylinderHeight);
+		FCollisionShape	TraceCylinder = FCollisionShape::MakeCapsule(CylinderRadius, CylinderHeight/2);
+		TraceCylinder.GetExtent();
+		FCollisionQueryParams StompParams;
+		StompParams.AddIgnoredActor(this);
+
+		bool bDidStomp = GetWorld()->SweepMultiByChannel(StompHitResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel1, TraceCylinder, StompParams);
+		if (bDidStomp)
 		{
-			AActor* StompedActor = StompResult.GetActor();
-			if (StompedActor != nullptr)
+			FVector HitDirection = -TraceEnd;
+			for (FHitResult StompResult : StompHitResults)
 			{
-				FPointDamageEvent StompEvent(StompDamage, StompResult, HitDirection, nullptr);
-				StompedActor->TakeDamage(StompDamage, StompEvent, GetController(), this);
-				if (ShowDebugStuff)
+				AActor* StompedActor = StompResult.GetActor();
+				if (StompedActor != nullptr)
 				{
+					FPointDamageEvent StompEvent(StompDamage, StompResult, HitDirection, nullptr);
+					StompedActor->TakeDamage(StompDamage, StompEvent, GetController(), this);
 				}
 			}
 		}
-	}
-	if (ShowDebugStuff)
-	{
-		FVector StartVector = GetActorLocation();
-		FVector EndVector(StartVector.X, StartVector.Y, StartVector.Z - CylinderHeight);
-		DrawDebugCylinder(GetWorld(), StartVector, EndVector, CylinderRadius, 16, FColor::Red, true);
+		if (ShowDebugStuff)
+		{
+			FVector StartVector = GetActorLocation();
+			FVector EndVector(StartVector.X, StartVector.Y, StartVector.Z - CylinderHeight);
+			DrawDebugCylinder(GetWorld(), StartVector, EndVector, CylinderRadius, 16, FColor::Red, true);
+		}		
 	}
 }
