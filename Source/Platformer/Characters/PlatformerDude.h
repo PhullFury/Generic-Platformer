@@ -44,6 +44,8 @@ private:
 		float CylinderRadius = 60.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
 		float StompDamage = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
+		float InvincibilityTimer = 1.5;
 
 	void MoveForward(float AxisValue);
 	void MoveSideways(float AxisValue);
@@ -53,5 +55,7 @@ private:
 	void StompAttack();
 
 	bool bIsSprinting;
+	bool bCanTakeDamage;
 	float CurrentSpeedModifier;
+	float DamageTime;
 };

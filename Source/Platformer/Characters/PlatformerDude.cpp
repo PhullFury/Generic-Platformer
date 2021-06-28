@@ -26,6 +26,7 @@ void APlatformerDude::BeginPlay()
 
 	GetCharacterMovement()->MaxWalkSpeed = CharacterSpeed;
 	bIsSprinting = false;
+	bCanTakeDamage = true;
 	CurrentSpeedModifier = 1;
 }
 
@@ -39,6 +40,10 @@ void APlatformerDude::Tick(float DeltaTime)
 	if(ShowDebugStuff)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current Speed Modifier: %f"), CurrentSpeedModifier);
+	}
+	if (GetWorld()->GetTimeSeconds() - DamageTime >= InvincibilityTimer)
+	{
+		bCanTakeDamage = true;
 	}
 }
 
@@ -143,7 +148,12 @@ void APlatformerDude::StompAttack()
 
 float APlatformerDude::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Error, TEXT("Ow"));
+	if (bCanTakeDamage)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Ow"));
+		bCanTakeDamage = false;
+		DamageTime = GetWorld()->GetTimeSeconds();
+	}
 
 	return DamageAmount;
 }
