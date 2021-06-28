@@ -118,7 +118,7 @@ void APlatformerDude::StompAttack()
 		FCollisionQueryParams StompParams;
 		StompParams.AddIgnoredActor(this);
 
-		bool bDidStomp = GetWorld()->SweepMultiByChannel(StompHitResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel1, TraceCylinder, StompParams);
+		bool bDidStomp = GetWorld()->SweepMultiByChannel(OUT StompHitResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel1, TraceCylinder, StompParams);
 		if (bDidStomp)
 		{
 			FVector HitDirection = -TraceEnd;
@@ -139,4 +139,11 @@ void APlatformerDude::StompAttack()
 			DrawDebugCylinder(GetWorld(), StartVector, EndVector, CylinderRadius, 16, FColor::Red, true);
 		}		
 	}
+}
+
+float APlatformerDude::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	UE_LOG(LogTemp, Error, TEXT("Ow"));
+
+	return DamageAmount;
 }
