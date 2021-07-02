@@ -29,7 +29,7 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, Category = "Basic")
+	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		ATriggerVolume* TriggerArea;
 
 	void ManageTrigger();

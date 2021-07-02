@@ -28,6 +28,8 @@ void APlatformerDude::BeginPlay()
 	bIsSprinting = false;
 	bCanTakeDamage = true;
 	CurrentSpeedModifier = 1;
+	Health = MaxHealth;
+	UE_LOG(LogTemp, Warning, TEXT("Health: %i"), Health);
 }
 
 // Called every frame
@@ -150,10 +152,21 @@ float APlatformerDude::TakeDamage(float DamageAmount, struct FDamageEvent const&
 {
 	if (bCanTakeDamage)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Ow"));
 		bCanTakeDamage = false;
 		DamageTime = GetWorld()->GetTimeSeconds();
+		Health -= DamageAmount;
+		UE_LOG(LogTemp, Warning, TEXT("Current Health: %i"), Health);
 	}
 
 	return DamageAmount;
+}
+
+float APlatformerDude::GetHealthPerc()
+{
+	return Health / MaxHealth;
+}
+
+int32 APlatformerDude::GetHealthAct()
+{
+	return Health;
 }

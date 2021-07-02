@@ -21,6 +21,11 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
+	UFUNCTION(BlueprintPure)
+		float GetHealthPerc(); //returns health percantage
+	UFUNCTION(BlueprintPure)
+		int32 GetHealthAct(); //returns actual health value
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,6 +51,8 @@ private:
 		float StompDamage = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
 		float InvincibilityTimer = 1.5;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
+		int32 MaxHealth = 3;
 
 	void MoveForward(float AxisValue);
 	void MoveSideways(float AxisValue);
@@ -58,4 +65,5 @@ private:
 	bool bCanTakeDamage;
 	float CurrentSpeedModifier;
 	float DamageTime;
+	int32 Health;
 };
