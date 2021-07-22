@@ -32,4 +32,8 @@ private:
 		bool bShowDebug = false;
 	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		float Radius = 10.f;
+	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
+		float RadiusMulti = 2.f;
+
+	void Pickup();
 };

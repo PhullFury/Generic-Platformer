@@ -31,8 +31,10 @@ private:
 		UStaticMeshComponent* Mesh;
 	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		ATriggerVolume* TriggerArea;
+	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
+		bool bDoesDamage = true;
+	UPROPERTY()
+		ACharacter* Player;
 
 	void ManageTrigger();
-
-	ACharacter* Player;
 };

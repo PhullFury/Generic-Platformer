@@ -20,7 +20,6 @@ APickupBase::APickupBase()
 void APickupBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -31,5 +30,23 @@ void APickupBase::Tick(float DeltaTime)
 	if (bShowDebug)
 	{
 		DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 12, FColor::Red, false, 0.2);
+	}
+	Pickup();
+}
+
+void APickupBase::Pickup()
+{
+	TArray<FHitResult> PickupResults;
+	FVector TraceStart = GetActorLocation();
+	FVector TraceEnd(TraceStart.X, TraceStart.Y, TraceStart.Z + 0.001);
+	FCollisionShape TraceSphere = FCollisionShape::MakeSphere(Radius);
+	FCollisionQueryParams PickupParams;
+	PickupParams.AddIgnoredActor(this);
+
+	bool bDidPickup = GetWorld()->SweepMultiByChannel(OUT PickupResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel2, TraceSphere, PickupParams);
+	
+	if (bDidPickup)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Player picked me up"));
 	}
 }

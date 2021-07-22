@@ -26,6 +26,8 @@ void ATriggerActor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("It works"));
 	}
+
+	//Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 }
 
 // Called every frame
@@ -38,7 +40,7 @@ void ATriggerActor::Tick(float DeltaTime)
 void ATriggerActor::ManageTrigger()
 {
 	if (TriggerArea != nullptr)
-	{
+	{		
 		TArray<AActor*> Result;
 		TriggerArea->GetOverlappingActors(OUT Result);
 		for (AActor* OverlapActor : Result)
@@ -46,5 +48,18 @@ void ATriggerActor::ManageTrigger()
 			FDamageEvent DamageEvent;
 			OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
 		}
+		/*if (bDoesDamage)
+		{
+		}
+		else if (!bDoesDamage)
+		{
+			for (AActor* OverlapActor : Result)
+			{
+				if (OverlapActor == Player)
+				{
+					UE_LOG(LogTemp, warning, TEXT("Player Picked me up"));
+				}
+			}
+		}*/
 	}
 }
