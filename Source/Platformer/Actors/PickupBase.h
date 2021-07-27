@@ -7,6 +7,7 @@
 #include "PickupBase.generated.h"
 
 class UStaticMeshComponent;
+class APlatformerDude;
 
 UCLASS()
 class PLATFORMER_API APickupBase : public AActor
@@ -34,6 +35,10 @@ private:
 		float Radius = 10.f;
 	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		float RadiusMulti = 2.f;
+	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
+		int32 HealthValue = 3;
+	UPROPERTY()
+		APlatformerDude* Player;
 
 	void Pickup();
 };

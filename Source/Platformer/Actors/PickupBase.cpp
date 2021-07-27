@@ -3,6 +3,8 @@
 
 #include "PickupBase.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
+#include "Platformer/Characters/PlatformerDude.h"
 
 #define OUT
 
@@ -20,6 +22,8 @@ APickupBase::APickupBase()
 void APickupBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Player = Cast<APlatformerDude>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 // Called every frame
@@ -48,5 +52,6 @@ void APickupBase::Pickup()
 	if (bDidPickup)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player picked me up"));
+		Player->SetHealth(HealthValue);
 	}
 }

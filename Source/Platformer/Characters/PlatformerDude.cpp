@@ -150,7 +150,7 @@ void APlatformerDude::StompAttack()
 
 float APlatformerDude::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	if (bCanTakeDamage)
+	if (bCanTakeDamage && Health != 0)
 	{
 		bCanTakeDamage = false;
 		DamageTime = GetWorld()->GetTimeSeconds();
@@ -169,4 +169,12 @@ float APlatformerDude::GetHealthPerc()
 int32 APlatformerDude::GetHealthAct()
 {
 	return Health;
+}
+
+void APlatformerDude::SetHealth(int32 HealthValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Set Value Called"));
+	Health = HealthValue;
+	bCanTakeDamage = false;
+	DamageTime = GetWorld()->GetTimeSeconds();
 }
