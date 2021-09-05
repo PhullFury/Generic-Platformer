@@ -34,6 +34,7 @@ private:
 		UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		USceneComponent* SpawnPoint;
+
 	UPROPERTY(EditAnywhere, Category = "Damage")
 		TSubclassOf<AProjectileBase> Projectile;
 	UPROPERTY(EditAnywhere, Category = "Damage")

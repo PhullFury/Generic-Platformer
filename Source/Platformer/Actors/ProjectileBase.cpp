@@ -13,6 +13,11 @@ AProjectileBase::AProjectileBase()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	RootComponent = Mesh;
+
+	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
+	ProjectileMovement->InitialSpeed = Speed;
+	ProjectileMovement->MaxSpeed = Speed;
+	InitialLifeSpan = LifeSpan;
 }
 
 // Called when the game starts or when spawned
@@ -20,6 +25,7 @@ void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	ProjectileMovement->ProjectileGravityScale = GravityScale;
 }
 
 // Called every frame

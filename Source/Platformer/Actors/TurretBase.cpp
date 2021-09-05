@@ -51,8 +51,7 @@ void ATurretBase::Tick(float DeltaTime)
 
 void ATurretBase::Shoot()
 {
-	AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(Projectile, GetActorLocation(), GetActorRotation());
+	AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(Projectile, SpawnPoint->GetComponentLocation(), GetActorRotation());
 	Bullet->SetOwner(this);
-	TimeSinceShoot = GetWorld()->GetTimeSeconds();
-	
+	TimeSinceShoot = GetWorld()->GetTimeSeconds();	
 }

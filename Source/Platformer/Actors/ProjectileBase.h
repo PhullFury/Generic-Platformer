@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ProjectileBase.generated.h"
 
+class UProjectileMovementComponent;
 class UStaticMeshComponent;
 
 UCLASS()
@@ -25,7 +26,16 @@ protected:
 	virtual void BeginPlay() override;
 
 
-private:	
+private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"));
+		UProjectileMovementComponent* ProjectileMovement;
+
+	UPROPERTY(EditAnywhere, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float Speed = 300.f;
+	UPROPERTY(EditAnywhere, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float LifeSpan = 5.f;
+	UPROPERTY(EditAnywhere, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float GravityScale = 0.f;
 };
