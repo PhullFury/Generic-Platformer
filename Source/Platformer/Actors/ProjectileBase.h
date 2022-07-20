@@ -38,4 +38,12 @@ private:
 		float LifeSpan = 5.f;
 	UPROPERTY(EditAnywhere, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		float GravityScale = 0.f;
+	UPROPERTY(EditAnywhere, Category = "Debug", meta = (AllowPrivateAccess = "true"))
+		bool bShowDebug = true;
+	UPROPERTY(EditAnywhere, Category = "Damage", meta = (AllowPrivateAccess = "true"))
+		float Radius = 10.f;
+	UPROPERTY(EditAnywhere, Category = "Damage", meta = (AllowPrivateAccess = "true"))
+		float Damage = 1.f;
+
+	void PDamage();
 };

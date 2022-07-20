@@ -143,7 +143,7 @@ void APlatformerDude::StompAttack()
 		{
 			FVector StartVector = GetActorLocation();
 			FVector EndVector(StartVector.X, StartVector.Y, StartVector.Z - CylinderHeight);
-			DrawDebugCylinder(GetWorld(), StartVector, EndVector, CylinderRadius, 16, FColor::Red, true);
+			DrawDebugCylinder(GetWorld(), StartVector, EndVector, CylinderRadius, 16, FColor::Green, true);
 		}		
 	}
 }
