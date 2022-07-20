@@ -18,6 +18,6 @@ void ADudeController::BeginPlay()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("No HUDBP attachec"));
+		UE_LOG(LogTemp, Error, TEXT("No HUDBP attached"));
 	}
 }

@@ -5,6 +5,8 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
+#define OUT
+
 // Sets default values
 AProjectileBase::AProjectileBase()
 {
@@ -33,4 +35,18 @@ void AProjectileBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bShowDebug)
+	{
+		DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 6, FColor::Red, true);
+	}
+}
+
+void AProjectileBase::PDamage()
+{
+	TArray<FHitResult> SweepResults;
+	FVector Start = GetActorLocation();
+	FVector End = GetActorLocation();
+	
+	//draw a cylinder as the trace shape instead of a circle cause how would a cirlce even work
+	//start the cylinder at the center of the projectile and make it go slightyly longer than the radius of the projectile and slighlity thicker too
 }
