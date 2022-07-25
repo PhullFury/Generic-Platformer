@@ -4,6 +4,7 @@
 #include "ProjectileBase.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #define OUT
 
@@ -14,6 +15,7 @@ AProjectileBase::AProjectileBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
+	Mesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 	RootComponent = Mesh;
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
@@ -39,14 +41,50 @@ void AProjectileBase::Tick(float DeltaTime)
 	{
 		DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 6, FColor::Red, true);
 	}
+	//PDamage();
 }
 
 void AProjectileBase::PDamage()
 {
 	TArray<FHitResult> SweepResults;
-	FVector Start = GetActorLocation();
-	FVector End = GetActorLocation();
-	
-	//draw a cylinder as the trace shape instead of a circle cause how would a cirlce even work
-	//start the cylinder at the center of the projectile and make it go slightyly longer than the radius of the projectile and slighlity thicker too
+	FVector TraceStart = GetActorLocation();
+	FVector TraceEnd = GetActorLocation() + Radius;
+	FCollisionShape TraceSphere = FCollisionShape::MakeSphere(Radius);
+	FCollisionQueryParams ProjectileParams;
+	ProjectileParams.AddIgnoredActor(this);
+
+	bool bDidHit = GetWorld()->SweepMultiByChannel(OUT SweepResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel3, TraceSphere, ProjectileParams);
+
+	if (bDidHit)
+	{
+		FVector HitDirection = -TraceEnd;
+		for (FHitResult SweepResult : SweepResults)
+		{
+			AActor* HitActor = SweepResult.GetActor();
+			if (HitActor != nullptr)
+			{
+				FPointDamageEvent ProjectileEvent(ProjectileDamage, SweepResult, HitDirection, nullptr);
+				HitActor->TakeDamage(ProjectileDamage, ProjectileEvent, GetInstigatorController(), this);
+			}
+		}
+	}
+
+	Destroy();
 }
+
+void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	AActor* MyOwner = GetOwner();
+	if (!MyOwner)
+	{
+		return;
+	}
+
+	if (OtherActor && OtherActor != MyOwner && OtherActor != this)
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, ProjectileDamage, GetInstigatorController(), DamageType);
+	}
+	Destroy();
+}
+
+//try this onhit method next time
