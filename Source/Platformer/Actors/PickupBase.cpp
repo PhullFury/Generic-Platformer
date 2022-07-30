@@ -52,6 +52,20 @@ void APickupBase::Pickup()
 	if (bDidPickup)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Player picked me up"));
-		Player->SetHealth(HealthValue);
+		if (bIsHealthPickup)
+		{
+			UE_LOG(LogTemp, Error, TEXT("I am a health pickup btw"));
+			Player->SetHealth();
+		}
+		else if (bIsDJumpPickup)
+		{
+			UE_LOG(LogTemp, Error, TEXT("I am a double jump pickup btw"));
+			Player->SetDJump(true);
+		}
+		else if (bIsDInvPickup)
+		{
+			UE_LOG(LogTemp, Error, TEXT("I am a invincible pickup btw"));
+		}
+		
 	}
 }

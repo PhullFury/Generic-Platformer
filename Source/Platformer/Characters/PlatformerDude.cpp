@@ -30,6 +30,8 @@ void APlatformerDude::BeginPlay()
 	CurrentSpeedModifier = 1;
 	Health = MaxHealth;
 	UE_LOG(LogTemp, Warning, TEXT("Health: %i"), Health);
+	DJumpCount = 0;
+	bCanDJump = false;
 }
 
 // Called every frame
@@ -39,6 +41,9 @@ void APlatformerDude::Tick(float DeltaTime)
 
 	SetSpeed(DeltaTime);
 	StompAttack();
+
+	bIsPlayerFalling = GetCharacterMovement()->IsFalling();
+
 	if(ShowDebugStuff)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current Speed Modifier: %f"), CurrentSpeedModifier);
@@ -47,6 +52,12 @@ void APlatformerDude::Tick(float DeltaTime)
 	{
 		bCanTakeDamage = true;
 	}
+	if (!bIsPlayerFalling)
+	{
+		DJumpCount = 0;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Current Jump Counter: %i"), DJumpCount);
+	UE_LOG(LogTemp, Warning, TEXT("Current Health Percentage: %f"), Health / MaxHealth);
 }
 
 // Called to bind functionality to input
@@ -57,7 +68,7 @@ void APlatformerDude::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAxis(TEXT("Sideways"), this, &APlatformerDude::MoveSideways);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ACharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis(TEXT("LookSideways"), this, &ACharacter::AddControllerYawInput);
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlatformerDude::PlayerJump);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlatformerDude::StartSprint);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlatformerDude::StopSprint);
 }
@@ -76,6 +87,19 @@ void APlatformerDude::MoveSideways(float AxisValue)
 	FRotator YawRotation(0, Rotation.Yaw, 0);
 	FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(Direction, AxisValue);
+}
+
+void APlatformerDude::PlayerJump()
+{
+	if (!bIsPlayerFalling)
+	{
+		Jump();
+	}
+	else if (bIsPlayerFalling && DJumpCount < MaxDJumpCount)
+	{
+		LaunchCharacter(FVector(0, 0, JumpSpeed), false, true);
+		DJumpCount++;
+	}
 }
 
 void APlatformerDude::StartSprint()
@@ -115,7 +139,7 @@ void APlatformerDude::SetSpeed(float DeltaTime)
 
 void APlatformerDude::StompAttack()
 {
-	if (GetCharacterMovement()->IsFalling())
+	if (bIsPlayerFalling)
 	{
 		TArray<FHitResult> StompHitResults;
 		FVector TraceStart = GetActorLocation();
@@ -171,10 +195,19 @@ int32 APlatformerDude::GetHealthAct()
 	return Health;
 }
 
-void APlatformerDude::SetHealth(int32 HealthValue)
+void APlatformerDude::SetHealth()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Set Value Called"));
-	Health = HealthValue;
+	if (Health != MaxHealth)
+	{
+		Health++;
+	}
 	bCanTakeDamage = false;
 	DamageTime = GetWorld()->GetTimeSeconds();
+}
+
+void APlatformerDude::SetDJump(bool bBoolValue)
+{
+	bCanDJump = bBoolValue;
+	UE_LOG(LogTemp, Error, TEXT("Double Jump is activated"));
 }

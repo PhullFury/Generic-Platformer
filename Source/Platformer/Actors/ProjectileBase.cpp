@@ -15,21 +15,21 @@ AProjectileBase::AProjectileBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	Mesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 	RootComponent = Mesh;
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
-	ProjectileMovement->InitialSpeed = Speed;
-	ProjectileMovement->MaxSpeed = Speed;
-	InitialLifeSpan = LifeSpan;
 }
 
 // Called when the game starts or when spawned
 void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//Mesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
 	ProjectileMovement->ProjectileGravityScale = GravityScale;
+	ProjectileMovement->InitialSpeed = Speed;
+	ProjectileMovement->MaxSpeed = Speed;
+	InitialLifeSpan = LifeSpan;
 }
 
 // Called every frame
@@ -41,7 +41,7 @@ void AProjectileBase::Tick(float DeltaTime)
 	{
 		DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 6, FColor::Red, true);
 	}
-	//PDamage();
+	PDamage();
 }
 
 void AProjectileBase::PDamage()
@@ -74,6 +74,8 @@ void AProjectileBase::PDamage()
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	UE_LOG(LogTemp, Warning, TEXT("OnHit is being called"));
+
 	AActor* MyOwner = GetOwner();
 	if (!MyOwner)
 	{
@@ -82,7 +84,7 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 	if (OtherActor && OtherActor != MyOwner && OtherActor != this)
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, ProjectileDamage, GetInstigatorController(), DamageType);
+		UGameplayStatics::ApplyDamage(OtherActor, ProjectileDamage, GetInstigatorController(), this, DamageType);
 	}
 	Destroy();
 }

@@ -36,8 +36,13 @@ private:
 		float Radius = 10.f;
 	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		float RadiusMulti = 2.f;
-	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
-		int32 HealthValue = 3;
+	UPROPERTY(EditAnywhere, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
+		bool bIsHealthPickup = true;
+	UPROPERTY(EditAnywhere, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
+		bool bIsDJumpPickup = false;
+	UPROPERTY(EditAnywhere, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
+		bool bIsDInvPickup = false;
+
 	UPROPERTY()
 		APlatformerDude* Player;
 

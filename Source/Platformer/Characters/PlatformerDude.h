@@ -20,7 +20,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	void SetHealth(int32 HealthValue);
+	void SetHealth();
+	void SetDJump(bool bBoolValue);
 
 	UFUNCTION(BlueprintPure)
 		float GetHealthPerc(); //returns health percantage
@@ -42,6 +43,8 @@ private:
 		float MaxSpeedModifier = 3.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
 		float SpeedChange = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = true))
+		int32 MaxDJumpCount = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "General", meta = (AllowPrivateAccess = true))
 		bool ShowDebugStuff = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
@@ -61,10 +64,14 @@ private:
 	void StopSprint();
 	void SetSpeed(float DeltaTime);
 	void StompAttack();
+	void PlayerJump();
 
 	bool bIsSprinting;
 	bool bCanTakeDamage;
+	bool bIsPlayerFalling;
+	bool bCanDJump;
 	float CurrentSpeedModifier;
 	float DamageTime;
 	int32 Health;
+	int32 DJumpCount;
 };
