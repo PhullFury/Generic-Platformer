@@ -29,8 +29,6 @@ protected:
 
 private:	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-		UCapsuleComponent* Capsule;
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		USceneComponent* SpawnPoint;

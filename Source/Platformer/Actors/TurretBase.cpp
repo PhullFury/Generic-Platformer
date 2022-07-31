@@ -10,12 +10,9 @@ ATurretBase::ATurretBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Collision"));
-	RootComponent = Capsule;
-
+	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
-	Mesh->SetupAttachment(RootComponent);
+	RootComponent = Mesh;
 
 	SpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
 	SpawnPoint->SetupAttachment(Mesh);
@@ -51,7 +48,7 @@ void ATurretBase::Tick(float DeltaTime)
 
 void ATurretBase::Shoot()
 {
-	AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(Projectile, SpawnPoint->GetComponentLocation(), GetActorRotation());
+	AProjectileBase* Bullet = GetWorld()->SpawnActor<AProjectileBase>(Projectile, SpawnPoint->GetComponentLocation(), SpawnPoint->GetComponentRotation());
 	Bullet->SetOwner(this);
 	TimeSinceShoot = GetWorld()->GetTimeSeconds();	
 }
