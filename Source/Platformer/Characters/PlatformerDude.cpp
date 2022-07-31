@@ -32,6 +32,7 @@ void APlatformerDude::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Health: %i"), Health);
 	DJumpCount = 0;
 	bCanDJump = false;
+	bIsInvincible = false;
 }
 
 // Called every frame
@@ -210,4 +211,21 @@ void APlatformerDude::SetDJump(bool bBoolValue)
 {
 	bCanDJump = bBoolValue;
 	UE_LOG(LogTemp, Error, TEXT("Double Jump is activated"));
+}
+
+void APlatformerDude::SetInvincible(bool bBoolValue)
+{
+	bIsInvincible = bBoolValue;
+	UE_LOG(LogTemp, Error, TEXT("The Player is not Invincible"));
+
+}
+
+bool APlatformerDude::GetDJump()
+{
+	return bCanDJump;
+}
+
+bool APlatformerDude::GetInvincible()
+{
+	return bIsInvincible;
 }

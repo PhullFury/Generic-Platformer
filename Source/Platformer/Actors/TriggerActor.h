@@ -8,6 +8,7 @@
 
 class ATriggerVolume;
 class UStaticMeshComponent;
+class APlatformerDude;
 
 UCLASS()
 class PLATFORMER_API ATriggerActor : public AActor
@@ -34,7 +35,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		bool bDoesDamage = true;
 	UPROPERTY()
-		ACharacter* Player;
+		AActor* PlayerActor;
+	UPROPERTY()
+		APlatformerDude* Player;
 
 	void ManageTrigger();
+
+	bool bIsPlayerInvincible;
 };

@@ -61,15 +61,14 @@ void AProjectileBase::PDamage()
 		for (FHitResult SweepResult : SweepResults)
 		{
 			AActor* HitActor = SweepResult.GetActor();
-			if (HitActor != nullptr)
+			if (HitActor != nullptr && HitActor != GetOwner())
 			{
 				FPointDamageEvent ProjectileEvent(ProjectileDamage, SweepResult, HitDirection, nullptr);
 				HitActor->TakeDamage(ProjectileDamage, ProjectileEvent, GetInstigatorController(), this);
+				Destroy();
 			}
 		}
-	}
-
-	Destroy();
+	}	
 }
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

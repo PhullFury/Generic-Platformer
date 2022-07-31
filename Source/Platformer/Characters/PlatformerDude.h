@@ -22,11 +22,16 @@ public:
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	void SetHealth();
 	void SetDJump(bool bBoolValue);
+	void SetInvincible(bool bBoolValue);
 
 	UFUNCTION(BlueprintPure)
 		float GetHealthPerc(); //returns health percantage
 	UFUNCTION(BlueprintPure)
 		int32 GetHealthAct(); //returns actual health value
+	UFUNCTION(BlueprintPure)
+		bool GetDJump();
+	UFUNCTION(BlueprintPure)
+		bool GetInvincible();
 
 
 protected:
@@ -70,6 +75,7 @@ private:
 	bool bCanTakeDamage;
 	bool bIsPlayerFalling;
 	bool bCanDJump;
+	bool bIsInvincible;
 	float CurrentSpeedModifier;
 	float DamageTime;
 	int32 Health;

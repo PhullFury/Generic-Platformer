@@ -65,6 +65,7 @@ void APickupBase::Pickup()
 		else if (bIsDInvPickup)
 		{
 			UE_LOG(LogTemp, Error, TEXT("I am a invincible pickup btw"));
+			Player->SetInvincible(true);
 		}
 		
 	}

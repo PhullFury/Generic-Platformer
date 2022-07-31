@@ -3,7 +3,9 @@
 
 #include "TriggerActor.h"
 #include "Engine/TriggerVolume.h"
+#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "Platformer/Characters/PlatformerDude.h"
 
 #define OUT
 
@@ -27,7 +29,8 @@ void ATriggerActor::BeginPlay()
 		UE_LOG(LogTemp, Warning, TEXT("It works"));
 	}
 
-	//Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	Player = Cast<APlatformerDude>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	PlayerActor = Cast<AActor>(Player);
 }
 
 // Called every frame
@@ -40,26 +43,24 @@ void ATriggerActor::Tick(float DeltaTime)
 void ATriggerActor::ManageTrigger()
 {
 	if (TriggerArea != nullptr)
-	{		
-		TArray<AActor*> Result;
-		TriggerArea->GetOverlappingActors(OUT Result);
-		for (AActor* OverlapActor : Result)
+	{	
+		if (bDoesDamage)
 		{
-			FDamageEvent DamageEvent;
-			OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
-		}
-		/*if (bDoesDamage)
-		{
-		}
-		else if (!bDoesDamage)
-		{
+			TArray<AActor*> Result;
+			TriggerArea->GetOverlappingActors(OUT Result);
 			for (AActor* OverlapActor : Result)
 			{
-				if (OverlapActor == Player)
+				if (OverlapActor != PlayerActor)
 				{
-					UE_LOG(LogTemp, warning, TEXT("Player Picked me up"));
+					FDamageEvent DamageEvent;
+					OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
+				}
+				else if (OverlapActor == PlayerActor && !Player->GetInvincible())
+				{
+					FDamageEvent DamageEvent;
+					OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
 				}
 			}
-		}*/
+		}		
 	}
 }
