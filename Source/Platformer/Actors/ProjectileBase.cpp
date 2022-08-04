@@ -4,7 +4,7 @@
 #include "ProjectileBase.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 
 #define OUT
 
@@ -16,6 +16,9 @@ AProjectileBase::AProjectileBase()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Static Mesh"));
 	RootComponent = Mesh;
+
+	TrailParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Trail Particle"));
+	TrailParticle->SetupAttachment(Mesh);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 }
@@ -41,6 +44,7 @@ void AProjectileBase::Tick(float DeltaTime)
 	{
 		DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 6, FColor::Red, true);
 	}
+
 	PDamage();
 }
 
@@ -71,7 +75,7 @@ void AProjectileBase::PDamage()
 	}	
 }
 
-void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+/*void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnHit is being called"));
 
@@ -86,6 +90,4 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		UGameplayStatics::ApplyDamage(OtherActor, ProjectileDamage, GetInstigatorController(), this, DamageType);
 	}
 	Destroy();
-}
-
-//try this onhit method next time
+}//try this onhit method next time*/

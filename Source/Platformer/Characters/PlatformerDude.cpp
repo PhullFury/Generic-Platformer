@@ -48,6 +48,8 @@ void APlatformerDude::Tick(float DeltaTime)
 	if(ShowDebugStuff)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current Speed Modifier: %f"), CurrentSpeedModifier);
+		UE_LOG(LogTemp, Warning, TEXT("Current Jump Counter: %i"), DJumpCount);
+		UE_LOG(LogTemp, Warning, TEXT("Current Health Percentage: %f"), Health / MaxHealth);
 	}
 	if (GetWorld()->GetTimeSeconds() - DamageTime >= InvincibilityTimer)
 	{
@@ -57,8 +59,6 @@ void APlatformerDude::Tick(float DeltaTime)
 	{
 		DJumpCount = 0;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Current Jump Counter: %i"), DJumpCount);
-	UE_LOG(LogTemp, Warning, TEXT("Current Health Percentage: %f"), Health / MaxHealth);
 }
 
 // Called to bind functionality to input

@@ -50,16 +50,22 @@ void ATriggerActor::ManageTrigger()
 			TriggerArea->GetOverlappingActors(OUT Result);
 			for (AActor* OverlapActor : Result)
 			{
-				if (OverlapActor != PlayerActor)
+				if (OverlapActor != this)
 				{
-					FDamageEvent DamageEvent;
-					OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
+					if (OverlapActor != PlayerActor)
+					{
+						FDamageEvent DamageEvent;
+						OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
+						UE_LOG(LogTemp, Warning, TEXT("Non Player Damage"));
+					}
+					else if (OverlapActor == PlayerActor && !Player->GetInvincible())
+					{
+						FDamageEvent DamageEvent;
+						OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
+						UE_LOG(LogTemp, Warning, TEXT("Player Damage"));
+					}
 				}
-				else if (OverlapActor == PlayerActor && !Player->GetInvincible())
-				{
-					FDamageEvent DamageEvent;
-					OverlapActor->TakeDamage(1, DamageEvent, GetInstigatorController(), this);
-				}
+				
 			}
 		}		
 	}

@@ -2,7 +2,6 @@
 
 
 #include "TurretBase.h"
-#include "Components/CapsuleComponent.h"
 #include "Platformer/Actors/ProjectileBase.h"
 
 // Sets default values

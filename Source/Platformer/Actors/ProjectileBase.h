@@ -46,6 +46,8 @@ private:
 		float ProjectileDamage = 1.f;
 	UPROPERTY(EditAnywhere, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<UDamageType> DamageType;
+	UPROPERTY(EditAnywhere, Category = "Component", meta = (AllowPrivateAccess = "true"));
+		UParticleSystemComponent* TrailParticle;
 
 	void PDamage();
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
