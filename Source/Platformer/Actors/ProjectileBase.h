@@ -46,9 +46,15 @@ private:
 		float ProjectileDamage = 1.f;
 	UPROPERTY(EditAnywhere, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<UDamageType> DamageType;
+	UPROPERTY(EditAnywhere, Category = "Damage", meta = (AllowPrivateAccess = "true"))
+		bool bIsPlayer = false;
 	UPROPERTY(EditAnywhere, Category = "Component", meta = (AllowPrivateAccess = "true"));
 		UParticleSystemComponent* TrailParticle;
 
+	UFUNCTION()
+		void OnBounce(const FHitResult& HitResult, const FVector& Vector);
+	
 	void PDamage();
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	int32 BounceCount;
 };

@@ -21,6 +21,10 @@ AProjectileBase::AProjectileBase()
 	TrailParticle->SetupAttachment(Mesh);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
+	ProjectileMovement->ProjectileGravityScale = GravityScale;
+	ProjectileMovement->InitialSpeed = Speed;
+	ProjectileMovement->MaxSpeed = Speed;
+	InitialLifeSpan = LifeSpan;
 }
 
 // Called when the game starts or when spawned
@@ -28,11 +32,8 @@ void AProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Mesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
-	ProjectileMovement->ProjectileGravityScale = GravityScale;
-	ProjectileMovement->InitialSpeed = Speed;
-	ProjectileMovement->MaxSpeed = Speed;
-	InitialLifeSpan = LifeSpan;
+	ProjectileMovement->OnProjectileBounce.AddDynamic(this, &AProjectileBase::OnBounce);
+	BounceCount = 0;
 }
 
 // Called every frame
@@ -57,7 +58,15 @@ void AProjectileBase::PDamage()
 	FCollisionQueryParams ProjectileParams;
 	ProjectileParams.AddIgnoredActor(this);
 
-	bool bDidHit = GetWorld()->SweepMultiByChannel(OUT SweepResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel3, TraceSphere, ProjectileParams);
+	bool bDidHit;
+	if (bIsPlayer)
+	{
+		bDidHit = GetWorld()->SweepMultiByChannel(OUT SweepResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel4, TraceSphere, ProjectileParams);
+	}
+	else if (!bIsPlayer)
+	{
+		bDidHit = GetWorld()->SweepMultiByChannel(OUT SweepResults, TraceStart, TraceEnd, FQuat::Identity, ECC_GameTraceChannel3, TraceSphere, ProjectileParams);
+	}
 
 	if (bDidHit)
 	{
@@ -75,19 +84,7 @@ void AProjectileBase::PDamage()
 	}	
 }
 
-/*void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectileBase::OnBounce(const FHitResult& HitResult, const FVector& Vector)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnHit is being called"));
-
-	AActor* MyOwner = GetOwner();
-	if (!MyOwner)
-	{
-		return;
-	}
-
-	if (OtherActor && OtherActor != MyOwner && OtherActor != this)
-	{
-		UGameplayStatics::ApplyDamage(OtherActor, ProjectileDamage, GetInstigatorController(), this, DamageType);
-	}
-	Destroy();
-}//try this onhit method next time*/
+	UE_LOG(LogTemp, Error, TEXT("Bounce check is working"));
+}

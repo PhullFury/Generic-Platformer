@@ -36,6 +36,7 @@ float ADestructibleBase::TakeDamage(float DamageAmount, struct FDamageEvent cons
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(this, DestroyEffect, GetActorLocation());
 	}
+
 	Destroy();
 
 	return DamageAmount;
