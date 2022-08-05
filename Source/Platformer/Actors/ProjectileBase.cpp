@@ -86,5 +86,13 @@ void AProjectileBase::PDamage()
 
 void AProjectileBase::OnBounce(const FHitResult& HitResult, const FVector& Vector)
 {
-	UE_LOG(LogTemp, Error, TEXT("Bounce check is working"));
+	if (bIsPlayer)
+	{
+		BounceCount++;
+		UE_LOG(LogTemp, Error, TEXT("Bounce number: %i"), BounceCount);
+		if (BounceCount == MaxBounceCount)
+		{
+			Destroy();
+		}
+	}
 }

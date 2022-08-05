@@ -40,6 +40,7 @@ private:
 		APlatformerDude* Player;
 
 	void ManageTrigger();
+	void ManageDamage();
 
 	bool bIsPlayerInvincible;
 };

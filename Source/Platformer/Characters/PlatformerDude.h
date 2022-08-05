@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "PlatformerDude.generated.h"
 
+class AProjectileBase;
+class USceneComponent;
+
 UCLASS()
 class PLATFORMER_API APlatformerDude : public ACharacter
 {
@@ -62,6 +65,10 @@ private:
 		float InvincibilityTimer = 1.5;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
 		int32 MaxHealth = 3;
+	UPROPERTY(VisibleAnywhere, Category = "Damage", meta = (AllowPrivateAccess = true))
+		USceneComponent* FireballSpawnPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
+		TSubclassOf<AProjectileBase> Fireball;
 
 	void MoveForward(float AxisValue);
 	void MoveSideways(float AxisValue);
@@ -70,12 +77,15 @@ private:
 	void SetSpeed(float DeltaTime);
 	void StompAttack();
 	void PlayerJump();
+	void StartThrow();
+	void StopThrow();
 
 	bool bIsSprinting;
 	bool bCanTakeDamage;
 	bool bIsPlayerFalling;
 	bool bCanDJump;
 	bool bIsInvincible;
+	bool bCanThrow;
 	float CurrentSpeedModifier;
 	float DamageTime;
 	int32 Health;

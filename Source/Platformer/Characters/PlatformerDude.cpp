@@ -4,6 +4,7 @@
 #include "PlatformerDude.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Platformer/Actors/ProjectileBase.h"
 
 #define OUT
 
@@ -12,6 +13,9 @@ APlatformerDude::APlatformerDude()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	FireballSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Fireball Spawn Point"));
+	FireballSpawnPoint->SetupAttachment(GetMesh());
 
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	GetCharacterMovement()->JumpZVelocity = JumpSpeed;
@@ -33,6 +37,7 @@ void APlatformerDude::BeginPlay()
 	DJumpCount = 0;
 	bCanDJump = false;
 	bIsInvincible = false;
+	bCanThrow = true;
 }
 
 // Called every frame
@@ -72,6 +77,8 @@ void APlatformerDude::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlatformerDude::PlayerJump);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Pressed, this, &APlatformerDude::StartSprint);
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlatformerDude::StopSprint);
+	PlayerInputComponent->BindAction(TEXT("Throw"), EInputEvent::IE_Pressed, this, &APlatformerDude::StartThrow);
+	PlayerInputComponent->BindAction(TEXT("Throw"), EInputEvent::IE_Released, this, &APlatformerDude::StopThrow);
 }
 
 void APlatformerDude::MoveForward(float AxisValue)
@@ -111,6 +118,27 @@ void APlatformerDude::StartSprint()
 void APlatformerDude::StopSprint()
 {
 	bIsSprinting = false;
+}
+
+void APlatformerDude::StartThrow()
+{
+	if (bCanThrow)
+	{
+		if (Fireball != nullptr)
+		{
+			AProjectileBase* ActiveFireball = GetWorld()->SpawnActor<AProjectileBase>(Fireball, FireballSpawnPoint->GetComponentLocation(), FireballSpawnPoint->GetComponentRotation());
+			ActiveFireball->SetOwner(this);
+		}
+		bCanThrow = false;
+	}
+}
+
+void APlatformerDude::StopThrow()
+{
+	if (!bCanThrow)
+	{
+		bCanThrow = true;
+	}
 }
 
 void APlatformerDude::SetSpeed(float DeltaTime)
@@ -216,7 +244,7 @@ void APlatformerDude::SetDJump(bool bBoolValue)
 void APlatformerDude::SetInvincible(bool bBoolValue)
 {
 	bIsInvincible = bBoolValue;
-	UE_LOG(LogTemp, Error, TEXT("The Player is not Invincible"));
+	UE_LOG(LogTemp, Error, TEXT("The Player is now Invincible"));
 
 }
 
