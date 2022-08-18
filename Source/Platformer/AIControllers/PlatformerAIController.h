@@ -21,4 +21,14 @@ private:
 		UBehaviorTree* AIBehaviorTree;
 	UPROPERTY(EditAnywhere, Category = "AI", meta = (AllowPrivateAccess = "true"))
 		float WalkLength = 200.f;
+
+	bool bCanCall;
+	ACharacter* Player;
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool bIsPlayerInSight;
 };

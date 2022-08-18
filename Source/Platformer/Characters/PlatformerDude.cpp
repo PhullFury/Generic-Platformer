@@ -103,7 +103,7 @@ void APlatformerDude::PlayerJump()
 	{
 		Jump();
 	}
-	else if (bIsPlayerFalling && DJumpCount < MaxDJumpCount)
+	else if (bIsPlayerFalling && DJumpCount < MaxDJumpCount && bCanDJump)
 	{
 		LaunchCharacter(FVector(0, 0, JumpSpeed), false, true);
 		DJumpCount++;
