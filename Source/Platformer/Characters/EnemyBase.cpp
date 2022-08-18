@@ -2,6 +2,9 @@
 
 
 #include "EnemyBase.h"
+#include "Components/CapsuleComponent.h"
+#include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -15,14 +18,17 @@ AEnemyBase::AEnemyBase()
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &AEnemyBase::OnHit);
+
+	Player = Cast<ACharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	PlayerActor = Cast<AActor>(Player);
 }
 
 // Called every frame
 void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -37,4 +43,12 @@ float AEnemyBase::TakeDamage(float DamageAmount, struct FDamageEvent const& Dama
 	UE_LOG(LogTemp, Warning, TEXT("I am taking damage"));
 
 	return DamageAmount;
+}
+
+void AEnemyBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if (OtherActor == PlayerActor)
+	{
+		UGameplayStatics::ApplyDamage(OtherActor, BumpDamage, GetController(), this, DamageType);
+	}
 }
