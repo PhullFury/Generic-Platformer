@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "PlatformerDude.generated.h"
 
+class ADudeController;
 class AProjectileBase;
 class USceneComponent;
 
@@ -69,6 +70,8 @@ private:
 		USceneComponent* FireballSpawnPoint;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = true))
 		TSubclassOf<AProjectileBase> Fireball;
+	UPROPERTY()
+		ADudeController* DudeController;
 
 	void MoveForward(float AxisValue);
 	void MoveSideways(float AxisValue);
@@ -79,6 +82,7 @@ private:
 	void PlayerJump();
 	void StartThrow();
 	void StopThrow();
+	void CallSetPause();
 
 	bool bIsSprinting;
 	bool bCanTakeDamage;

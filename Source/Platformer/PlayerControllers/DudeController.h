@@ -21,6 +21,14 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<UUserWidget> HUDBP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<UUserWidget> PauseBP;
 	UPROPERTY()
-		UUserWidget* HUD;
+		UUserWidget* UWHUD;
+	UPROPERTY()
+		UUserWidget* UWPause;
+
+public:
+	UFUNCTION(BlueprintCallable)
+		void SetPause(bool bIsGamePause);
 };

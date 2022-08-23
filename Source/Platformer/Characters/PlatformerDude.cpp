@@ -4,7 +4,9 @@
 #include "PlatformerDude.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Platformer/Actors/ProjectileBase.h"
+#include "Platformer/PlayerControllers/DudeController.h"
 
 #define OUT
 
@@ -38,6 +40,7 @@ void APlatformerDude::BeginPlay()
 	bCanDJump = false;
 	bIsInvincible = false;
 	bCanThrow = true;
+	DudeController = Cast<ADudeController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 }
 
 // Called every frame
@@ -79,6 +82,7 @@ void APlatformerDude::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction(TEXT("Sprint"), EInputEvent::IE_Released, this, &APlatformerDude::StopSprint);
 	PlayerInputComponent->BindAction(TEXT("Throw"), EInputEvent::IE_Pressed, this, &APlatformerDude::StartThrow);
 	PlayerInputComponent->BindAction(TEXT("Throw"), EInputEvent::IE_Released, this, &APlatformerDude::StopThrow);
+	PlayerInputComponent->BindAction(TEXT("Pause"), EInputEvent::IE_Pressed, this, &APlatformerDude::CallSetPause);
 }
 
 void APlatformerDude::MoveForward(float AxisValue)
@@ -139,6 +143,11 @@ void APlatformerDude::StopThrow()
 	{
 		bCanThrow = true;
 	}
+}
+
+void APlatformerDude::CallSetPause()
+{
+	DudeController->SetPause(true);
 }
 
 void APlatformerDude::SetSpeed(float DeltaTime)

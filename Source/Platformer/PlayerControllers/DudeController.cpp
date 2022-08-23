@@ -10,14 +10,35 @@ void ADudeController::BeginPlay()
 
 	if (HUDBP != nullptr)
 	{
-		HUD = CreateWidget(this, HUDBP);
-		if (HUD != nullptr)
+		UWHUD = CreateWidget(this, HUDBP);
+		if (UWHUD != nullptr)
 		{
-			HUD->AddToViewport();
+			UWHUD->AddToViewport();
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("No HUDBP attached"));
+	}
+}
+
+void ADudeController::SetPause(bool bIsGamePause)
+{
+	if (bIsGamePause)
+	{
+		if (PauseBP != nullptr)
+		{
+			UWPause = CreateWidget(this, PauseBP);
+			if (UWPause != nullptr)
+			{
+				UWPause->AddToViewport();
+			}
+			UWHUD->RemoveFromViewport();
+		}
+	}
+	else if (!bIsGamePause)
+	{
+		UWPause->RemoveFromViewport();
+		UWHUD->AddToViewport();
 	}
 }

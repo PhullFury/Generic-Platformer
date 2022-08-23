@@ -89,7 +89,6 @@ void AProjectileBase::OnBounce(const FHitResult& HitResult, const FVector& Vecto
 	if (bIsPlayer)
 	{
 		BounceCount++;
-		UE_LOG(LogTemp, Error, TEXT("Bounce number: %i"), BounceCount);
 		if (BounceCount == MaxBounceCount)
 		{
 			Destroy();
