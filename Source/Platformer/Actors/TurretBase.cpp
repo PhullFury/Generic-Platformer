@@ -22,8 +22,7 @@ void ATurretBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	bCanShoot = true;
-	TimeSinceShoot = GetWorld()->GetTimeSeconds();
+	bHasFiredFirstShot = false;
 }
 
 // Called every frame
@@ -31,18 +30,15 @@ void ATurretBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (GetWorld()->GetTimeSeconds() - TimeSinceShoot >= ShootTimer)
+	if (GetWorld()->GetTimeSeconds() >= OffsetTimer && !bHasFiredFirstShot)
 	{
 		Shoot();
-		//bCanShoot = true;
+		bHasFiredFirstShot = true;
 	}
-
-	/*if (bCanShoot)
+	if (GetWorld()->GetTimeSeconds() - TimeSinceShoot >= ShootTimer && bHasFiredFirstShot)
 	{
 		Shoot();
-		bCanShoot = false;
-		TimeSinceShoot = GetWorld()->GetTimeSeconds();
-	}*/
+	}
 }
 
 void ATurretBase::Shoot()

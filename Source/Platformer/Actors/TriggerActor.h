@@ -28,12 +28,16 @@ protected:
 
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
-	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = "Trigger", meta = (AllowPrivateAccess = "true"))
 		ATriggerVolume* TriggerArea;
-	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, Category = "Trigger", meta = (AllowPrivateAccess = "true"))
 		bool bDoesDamage = true;
+	UPROPERTY(EditAnywhere, Category = "Trigger", meta = (AllowPrivateAccess = "true"))
+		bool bIsFlagPost = true;
+	UPROPERTY(EditAnywhere, Category = "Damage", meta = (AllowPrivateAccess = "true"))
+		int32 TriggerDamage = 1;
 	UPROPERTY()
 		AActor* PlayerActor;
 	UPROPERTY()
@@ -41,6 +45,7 @@ private:
 
 	void ManageTrigger();
 	void ManageDamage();
+	void ManageFlag();
 
 	bool bIsPlayerInvincible;
 };

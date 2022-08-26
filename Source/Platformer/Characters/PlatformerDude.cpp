@@ -216,11 +216,29 @@ float APlatformerDude::TakeDamage(float DamageAmount, struct FDamageEvent const&
 	{
 		bCanTakeDamage = false;
 		DamageTime = GetWorld()->GetTimeSeconds();
-		Health -= DamageAmount;
+		if (Health > DamageAmount)
+		{
+			Health -= DamageAmount;
+		}
+		else if (DamageAmount > Health)
+		{
+			Health = 0;
+		}
+		if (Health == 0)
+		{
+			GameEnd(false);
+		}
 		UE_LOG(LogTemp, Warning, TEXT("Current Health: %i"), Health);
 	}
 
 	return DamageAmount;
+}
+
+void APlatformerDude::GameEnd(bool bDidPlayerWin)
+{
+	DudeController->HandleGameEndScreen(bDidPlayerWin);
+	DetachFromControllerPendingDestroy();
+	Destroy();
 }
 
 float APlatformerDude::GetHealthPerc()

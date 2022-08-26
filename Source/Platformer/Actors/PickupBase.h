@@ -8,6 +8,7 @@
 
 class UStaticMeshComponent;
 class APlatformerDude;
+class USceneComponent;
 
 UCLASS()
 class PLATFORMER_API APickupBase : public AActor
@@ -27,8 +28,10 @@ protected:
 
 
 private:	
-	UPROPERTY(VisibleAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* Mesh;
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+		USceneComponent* TraceSpawnPoint;
 
 	UPROPERTY(EditAnywhere, Category = "Basic", meta = (AllowPrivateAccess = "true"))
 		bool bShowDebug = false;
@@ -45,6 +48,8 @@ private:
 
 	UPROPERTY()
 		APlatformerDude* Player;
+	UPROPERTY()
+		AActor* PlayerActor;
 
 	void Pickup();
 };

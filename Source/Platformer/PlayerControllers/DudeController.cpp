@@ -11,10 +11,7 @@ void ADudeController::BeginPlay()
 	if (HUDBP != nullptr)
 	{
 		UWHUD = CreateWidget(this, HUDBP);
-		if (UWHUD != nullptr)
-		{
-			UWHUD->AddToViewport();
-		}
+		UWHUD->AddToViewport();
 	}
 	else
 	{
@@ -29,10 +26,7 @@ void ADudeController::SetPause(bool bIsGamePause)
 		if (PauseBP != nullptr)
 		{
 			UWPause = CreateWidget(this, PauseBP);
-			if (UWPause != nullptr)
-			{
-				UWPause->AddToViewport();
-			}
+			UWPause->AddToViewport();
 			UWHUD->RemoveFromViewport();
 		}
 	}
@@ -41,4 +35,25 @@ void ADudeController::SetPause(bool bIsGamePause)
 		UWPause->RemoveFromViewport();
 		UWHUD->AddToViewport();
 	}
+}
+
+void ADudeController::HandleGameEndScreen(bool bDidPlayerWin)
+{
+	if (bDidPlayerWin)
+	{
+		if (WinBP != nullptr)
+		{
+			UWWin = CreateWidget(this, WinBP);
+			UWWin->AddToViewport();
+		}
+	}
+	else if (!bDidPlayerWin)
+	{
+		if (LoseBP != nullptr)
+		{
+			UWLose = CreateWidget(this, LoseBP);
+			UWLose->AddToViewport();
+		}
+	}
+	UWHUD->RemoveFromViewport();
 }

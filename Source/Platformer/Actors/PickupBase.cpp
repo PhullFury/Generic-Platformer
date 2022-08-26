@@ -16,6 +16,9 @@ APickupBase::APickupBase()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
+
+	TraceSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Trace Spawn Point"));
+	TraceSpawnPoint->SetupAttachment(Mesh);
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +27,7 @@ void APickupBase::BeginPlay()
 	Super::BeginPlay();
 
 	Player = Cast<APlatformerDude>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	PlayerActor = Cast<AActor>(Player);
 }
 
 // Called every frame
@@ -33,7 +37,7 @@ void APickupBase::Tick(float DeltaTime)
 
 	if (bShowDebug)
 	{
-		DrawDebugSphere(GetWorld(), GetActorLocation(), Radius, 12, FColor::Red, false, 0.2);
+		DrawDebugSphere(GetWorld(), TraceSpawnPoint->GetComponentLocation(), Radius, 12, FColor::Red, false, 0.2);
 	}
 	Pickup();
 }
@@ -41,7 +45,7 @@ void APickupBase::Tick(float DeltaTime)
 void APickupBase::Pickup()
 {
 	TArray<FHitResult> PickupResults;
-	FVector TraceStart = GetActorLocation();
+	FVector TraceStart = TraceSpawnPoint->GetComponentLocation();
 	FVector TraceEnd(TraceStart.X, TraceStart.Y, TraceStart.Z + 0.001);
 	FCollisionShape TraceSphere = FCollisionShape::MakeSphere(Radius);
 	FCollisionQueryParams PickupParams;
@@ -67,6 +71,6 @@ void APickupBase::Pickup()
 			UE_LOG(LogTemp, Error, TEXT("I am a invincible pickup btw"));
 			Player->SetInvincible(true);
 		}
-		
-	}
+		Destroy();
+	}	
 }

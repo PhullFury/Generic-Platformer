@@ -37,8 +37,10 @@ private:
 		TSubclassOf<AProjectileBase> Projectile;
 	UPROPERTY(EditAnywhere, Category = "Damage")
 		float ShootTimer = 3.f;
+	UPROPERTY(EditAnywhere, Category = "Damage")
+		float OffsetTimer = 0.f;
 
-	bool bCanShoot;
+	bool bHasFiredFirstShot;
 	float TimeSinceShoot;
 
 	void Shoot();

@@ -23,12 +23,22 @@ private:
 		TSubclassOf<UUserWidget> HUDBP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<UUserWidget> PauseBP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<UUserWidget> WinBP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<UUserWidget> LoseBP;
 	UPROPERTY()
 		UUserWidget* UWHUD;
 	UPROPERTY()
 		UUserWidget* UWPause;
+	UPROPERTY()
+		UUserWidget* UWWin;
+	UPROPERTY()
+		UUserWidget* UWLose;
 
 public:
 	UFUNCTION(BlueprintCallable)
 		void SetPause(bool bIsGamePause);
+
+	void HandleGameEndScreen(bool bDidPlayerWin);
 };

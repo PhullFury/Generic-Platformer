@@ -27,6 +27,7 @@ public:
 	void SetHealth();
 	void SetDJump(bool bBoolValue);
 	void SetInvincible(bool bBoolValue);
+	void GameEnd(bool bDidPlayerWin);
 
 	UFUNCTION(BlueprintPure)
 		float GetHealthPerc(); //returns health percantage
